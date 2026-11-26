@@ -3,6 +3,7 @@ import joblib
 import re
 import numpy as np
 import pandas as pd
+import gzip
 
 # 1. Configuración básica de la página
 st.set_page_config(page_title="Detector de Phishing", page_icon="🔒")
@@ -13,7 +14,8 @@ st.write("Pega una URL y el modelo te dirá si es legítima o sospechosa de phis
 # Usamos @st.cache_resource para que la app no recargue los modelos cada vez que el usuario hace clic
 @st.cache_resource
 def cargar_modelos():
-    modelo = joblib.load('modelo_phishing.pkl')
+    with gzip.open('modelo_phishing.pkl.gz', 'rb') as f:
+        modelo = joblib.load(f)
     scaler = joblib.load('scaler_phishing.pkl')
     feature_cols = joblib.load('feature_cols.pkl')
     return modelo, scaler, feature_cols
